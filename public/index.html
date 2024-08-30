@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="auto">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="description" content=""/>
+  <meta
+    name="LECC31_BenildoMorais_5870"
+    content="Mark Otto, Jacob Thornton, and Bootstrap contributors"
+  />
+  <meta name="generator" content="Hugo 0.111.3"/>
+  <title>LECC31_BenildoMorais_5870</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Rubik&display=swap"
+    rel="stylesheet"
+  />
+
+  <link href="css/bootstrap.min.css" rel="stylesheet" />
+  <link href="css/styles.css" rel="stylesheet" />
+  
+  <style>
+  </style>
+</head>
+<body>
+
+  <nav class="navbar bg-body-tertiary">
+    <form class="container-fluid justify-content-start">
+      <button class="btn btn-outline-primary me-2" type="submit">Mostrar sumarios</button>
+      <span class="fs-5" id="cadeira">
+        Cadeira de Progrmação Web 2 
+      </span>
+    </form>
+  </nav>
+
+    <div class="col-sm-11 mx-auto">
+      <div id="sumarios"></div>
+    </div>
+
+  <script>
+    document.querySelector("button").addEventListener("click", (e) => {
+      e.preventDefault();
+
+      fetch('http://localhost:8080/', {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then(function(res) {
+          return res.json();
+        })
+        .then(function(resJson) {
+          console.log(resJson);
+          var listaSumarios= resJson;
+          var SumariosHTML = "";
+          if (listaSumarios && listaSumarios.length > 0) {
+            listaSumarios.forEach(function(sumario) {
+              SumariosHTML += `
+                <div class="card sumarios" id="card">
+                  <div class="card-header">
+                    <h6 class="card-title">${sumario.pubDate}</h5>
+                  </div>
+                  <div class="card-body">
+                    <h4 class="card-title">${sumario.title}</h5>
+                  <p>${sumario.description}</p>
+                  <a href="${sumario.link}" class="btn btn-primary">Ir para o Sumario</a>
+                  </div>
+                </div>
+              `;
+            });
+          } else {
+            SumariosHTML = "<p>Nenhum Sumario Encontrado</p>";
+          }
+          document.querySelector("#sumarios").innerHTML = SumariosHTML;
+        })
+        .catch(function(error) {
+          console.log("Ocorreu um erro na requisição:", error);
+        });
+    });
+  </script>
+</body>
+</html>
